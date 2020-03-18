@@ -35,7 +35,25 @@ public class StudentRepository {
 
   public List<Student> query() throws ClassNotFoundException, SQLException {
     // TODO:
-    return new ArrayList<>();
+    List<Student> stuList = new ArrayList<>();
+    Student stu = null;
+//    Class.forName("com.mysql.jdbc.Driver");
+    Connection conn = DriverManager.getConnection(URL, USER, PASSWORD);
+    String sql = "SELECT * FROM student_sys";
+    Statement stmt = conn.createStatement();
+    ResultSet rs = stmt.executeQuery(sql);
+    while (rs.next()) {
+      stu = new Student();
+      stu.setId(rs.getString("id"));
+      stu.setName(rs.getString("name"));
+      stu.setGender(rs.getString("gender"));
+      stu.setAdmissionYear(rs.getInt("admissionYear"));
+      stu.setBirthday(rs.getDate("birthday"));
+      stu.setClassId(rs.getString("classId"));
+
+      stuList.add(stu);
+    }
+    return stuList;
   }
 
   public List<Student> queryByClassId(String classId) {
