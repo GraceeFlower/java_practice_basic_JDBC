@@ -54,14 +54,31 @@ public class StudentRepository {
     return stuList;
   }
 
-  public List<Student> queryByClassId(String classId) {
+  public List<Student> queryByClassId(String classId) throws SQLException {
     // TODO:
-    return new ArrayList<>();
+    List<Student> stuList = new ArrayList<>();
+    Student stu;
+    Connection conn = DriverManager.getConnection(URL, USER, PASSWORD);
+    String sql = "SELECT * FROM student_sys WHERE classId=? ORDER BY id DESC";
+    PreparedStatement pre = conn.prepareStatement(sql);
+    pre.setString(1, classId);
+    ResultSet rs = pre.executeQuery();
+    while (rs.next()) {
+      stu = new Student();
+      stu.setId(rs.getString("id"));
+      stu.setName(rs.getString("name"));
+      stu.setGender(rs.getString("gender"));
+      stu.setAdmissionYear(rs.getInt("admissionYear"));
+      stu.setBirthday(rs.getDate("birthday"));
+      stu.setClassId(rs.getString("classId"));
+
+      stuList.add(stu);
+    }
+    return stuList;
   }
 
   public void update(String id, Student student) throws SQLException {
     // TODO:
-
     Connection conn = DriverManager.getConnection(URL, USER, PASSWORD);
     String sql = "UPDATE student_sys set id=?, name=?, gender=?, admissionYear=?, birthday=?, classId=? WHERE id=?";
     PreparedStatement pre = conn.prepareStatement(sql);
@@ -76,7 +93,13 @@ public class StudentRepository {
     pre.execute();
   }
 
-  public void delete(String id) {
+  public void delete(String id) throws SQLException {
     // TODO:
+    Connection conn = DriverManager.getConnection(URL, USER, PASSWORD);
+    String sql = "DELETE FROM student_sys where id=?";
+    PreparedStatement pre = conn.prepareStatement(sql);
+    pre.setString(1, id);
+
+    pre.execute();
   }
 }
