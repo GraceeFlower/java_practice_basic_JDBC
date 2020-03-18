@@ -1,19 +1,39 @@
 package com.thoughtworks;
 
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
 public class StudentRepository {
+  public static final String URL = "jdbc:mysql://127.0.0.1:3306/grace?useUnicode=true&characterEncoding=utf-8&serverTimezone=Hongkong";
+  public static final String USER = "root";
+  public static final String PASSWORD = "guoer123";
 
-  public void save(List<Student> students) {
-    students.forEach(this::save);
+  public void save(List<Student> students) throws ClassNotFoundException, SQLException {
+    for (Student student : students) {
+      save(student);
+    }
   }
 
-  public void save(Student student) {
+  public void save(Student student) throws ClassNotFoundException, SQLException {
     // TODO:
+//    Class.forName("com.mysql.jdbc.Driver");
+    java.util.Date utilDate = student.getBirthday();
+    java.sql.Date sqlDate = new java.sql.Date(utilDate.getTime());
+    Connection conn = DriverManager.getConnection(URL, USER, PASSWORD);
+    String sql = "INSERT INTO student_sys VALUES(?, ?, ?, ?, ?, ?)";
+    PreparedStatement pre = conn.prepareStatement(sql);
+    pre.setString(1, student.getId());
+    pre.setString(2, student.getName());
+    pre.setString(3, student.getGender());
+    pre.setInt(4, student.getAdmissionYear());
+    pre.setDate(5, sqlDate);
+    pre.setString(6, student.getClassId());
+
+    pre.execute();
   }
 
-  public List<Student> query() {
+  public List<Student> query() throws ClassNotFoundException, SQLException {
     // TODO:
     return new ArrayList<>();
   }
