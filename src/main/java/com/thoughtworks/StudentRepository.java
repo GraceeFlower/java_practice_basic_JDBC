@@ -18,8 +18,6 @@ public class StudentRepository {
   public void save(Student student) throws ClassNotFoundException, SQLException {
     // TODO:
 //    Class.forName("com.mysql.jdbc.Driver");
-    java.util.Date utilDate = student.getBirthday();
-    java.sql.Date sqlDate = new java.sql.Date(utilDate.getTime());
     Connection conn = DriverManager.getConnection(URL, USER, PASSWORD);
     String sql = "INSERT INTO student_sys VALUES(?, ?, ?, ?, ?, ?)";
     PreparedStatement pre = conn.prepareStatement(sql);
@@ -27,7 +25,7 @@ public class StudentRepository {
     pre.setString(2, student.getName());
     pre.setString(3, student.getGender());
     pre.setInt(4, student.getAdmissionYear());
-    pre.setDate(5, sqlDate);
+    pre.setDate(5, new java.sql.Date(student.getBirthday().getTime()));
     pre.setString(6, student.getClassId());
 
     pre.execute();
@@ -36,7 +34,7 @@ public class StudentRepository {
   public List<Student> query() throws ClassNotFoundException, SQLException {
     // TODO:
     List<Student> stuList = new ArrayList<>();
-    Student stu = null;
+    Student stu;
 //    Class.forName("com.mysql.jdbc.Driver");
     Connection conn = DriverManager.getConnection(URL, USER, PASSWORD);
     String sql = "SELECT * FROM student_sys";
@@ -61,8 +59,21 @@ public class StudentRepository {
     return new ArrayList<>();
   }
 
-  public void update(String id, Student student) {
+  public void update(String id, Student student) throws SQLException {
     // TODO:
+
+    Connection conn = DriverManager.getConnection(URL, USER, PASSWORD);
+    String sql = "UPDATE student_sys set id=?, name=?, gender=?, admissionYear=?, birthday=?, classId=? WHERE id=?";
+    PreparedStatement pre = conn.prepareStatement(sql);
+    pre.setString(1, student.getId());
+    pre.setString(2, student.getName());
+    pre.setString(3, student.getGender());
+    pre.setInt(4, student.getAdmissionYear());
+    pre.setDate(5, new java.sql.Date(student.getBirthday().getTime()));
+    pre.setString(6, student.getClassId());
+    pre.setString(7, id);
+
+    pre.execute();
   }
 
   public void delete(String id) {
