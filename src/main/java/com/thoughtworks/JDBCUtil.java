@@ -4,6 +4,7 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.net.URL;
 import java.sql.*;
+import java.util.Objects;
 import java.util.Properties;
 
 public class JDBCUtil {
@@ -17,7 +18,7 @@ public class JDBCUtil {
             Properties pro = new Properties();
             ClassLoader classLoader = JDBCUtil.class.getClassLoader();
             URL pathURL = classLoader.getResource("jdbc.properties");
-            String path = pathURL.getPath();
+            String path = Objects.requireNonNull(pathURL).getPath();
             pro.load(new FileReader(path));
             URL = pro.getProperty("URL");
             USER = pro.getProperty("USER");
