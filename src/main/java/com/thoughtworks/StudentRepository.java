@@ -22,7 +22,7 @@ public class StudentRepository {
         } catch (SQLException e) {
             e.printStackTrace();
         } finally {
-            JDBCUtil.releaseSource(conn, pre);
+            JDBCUtil.releaseSource(pre, conn);
         }
     }
 
@@ -53,7 +53,7 @@ public class StudentRepository {
         } catch (SQLException e) {
             e.printStackTrace();
         } finally {
-            JDBCUtil.releaseSource(conn, stmt, rs);
+            JDBCUtil.releaseSource(rs, stmt, conn);
         }
         return stuList;
     }
@@ -94,7 +94,7 @@ public class StudentRepository {
         } catch (SQLException e) {
             e.printStackTrace();
         } finally {
-            JDBCUtil.releaseSource(conn, pre, rs);
+            JDBCUtil.releaseSource(rs, pre, conn);
         }
         return stuList;
     }
@@ -114,7 +114,7 @@ public class StudentRepository {
         } catch (SQLException e) {
             e.printStackTrace();
         } finally {
-            JDBCUtil.releaseSource(conn, pre);
+            JDBCUtil.releaseSource(pre, conn);
         }
     }
 
@@ -130,7 +130,7 @@ public class StudentRepository {
         } catch (SQLException e) {
             e.printStackTrace();
         } finally {
-            JDBCUtil.releaseSource(conn, pre);
+            JDBCUtil.releaseSource(pre, conn);
         }
     }
 }

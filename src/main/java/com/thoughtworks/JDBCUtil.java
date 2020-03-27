@@ -12,6 +12,7 @@ public class JDBCUtil {
     private static String URL;
     private static String USER;
     private static String PASSWORD;
+    private static String DRIVER;
 
     static {
         try {
@@ -23,21 +24,26 @@ public class JDBCUtil {
             URL = pro.getProperty("URL");
             USER = pro.getProperty("USER");
             PASSWORD = pro.getProperty("PASSWORD");
+            DRIVER = pro.getProperty("DRIVER");
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
     public static Connection connectToDB() throws SQLException {
+        try {
+            Class.forName(DRIVER);
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        }
         return DriverManager.getConnection(URL, USER, PASSWORD);
     }
 
-    public static void releaseSource(Connection conn, Statement pre) {
-        doubleClose(conn, pre);
+    public static void releaseSource(Statement stmt, Connection conn) {
+        doubleClose(stmt, conn);
     }
 
-    public static void releaseSource(Connection conn, Statement pre, ResultSet res) {
-        doubleClose(conn, pre);
+    public static void releaseSource(ResultSet res, Statement stmt, Connection conn) {
         if (null != res) {
             try {
                 res.close();
@@ -45,12 +51,13 @@ public class JDBCUtil {
                 e.printStackTrace();
             }
         }
+        doubleClose(stmt, conn);
     }
 
-    private static void doubleClose(Connection conn, Statement pre) {
-        if (null != pre) {
+    private static void doubleClose(Statement stmt, Connection conn) {
+        if (null != stmt) {
             try {
-                pre.close();
+                stmt.close();
             } catch (SQLException e) {
                 e.printStackTrace();
             }
